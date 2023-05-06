@@ -101,7 +101,7 @@ class Game:
     
     def update(self):
         for p in self.paths:
-            p.update()
+            p.update(self.stoplights)
 
     def draw_path_count_txt(self):
         for i in range(len(self.paths)):
