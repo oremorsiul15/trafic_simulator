@@ -21,16 +21,16 @@ class Car:
         self.direction = (float(p1[0]), float(p1[1]))
 
     def move(self, next_car_pos, state):
-        # if next_car_pos is not None:
-        #     self.ref = next_car_pos.pos
-        #     distance = get_distance(self.pos, self.ref)
-        #     speed = (self.speed if (distance > 30) and (
-        #         self.u < next_car_pos.u) else 1)
-        #     # print(self.pos, next_car_pos.pos, distance, speed)
-        #     # print(state/2 *speed, speed)
-        #     self.u = (self.u + state/2 * speed)
-        # else:
-        self.u = (self.u + state/2 * self.speed)
+        if next_car_pos is not None:
+            self.ref = next_car_pos.pos
+            distance = get_distance(self.pos, self.ref)
+            speed_factor = (1 if (distance > 40) and (
+                self.u < next_car_pos.u) else (distance**6)/4096000000)
+            # print(self.pos, next_car_pos.pos, distance, speed)
+            # print(state/2 *speed, speed)
+            self.u = (self.u + (state/2) * (self.speed * speed_factor))
+        else:
+            self.u = (self.u + state/2 * self.speed)
         p = interpolate.splev(self.u, self.path)
         p1 = interpolate.splev(self.u+0.01, self.path)
         self.pos = (float(p[0]), float(p[1]))

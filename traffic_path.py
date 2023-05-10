@@ -14,7 +14,7 @@ class Path:
         self.points = []
         self.smooth = []
         self.cars: list[Car] = []
-        self.rate = 5
+        self.rate = 20
         self.k = 3
         self.speed = 10
         self.path_limit = 10
@@ -69,13 +69,14 @@ class Path:
         self.collision_matrix = self.collision_matrix * 0
 
         for i in range(l):
-            if (i >= 1):
-                self.cars[i].move(self.cars[i-1],
-                                  2 if len(stoplights) < 1 else self.colliding(self.cars[i].pos, stoplights))
-            else:
+            if (i == 0):
                 self.cars[i].move(None,
                                   2 if len(stoplights) < 1 else self.colliding(self.cars[i].pos, stoplights))
+            else:
+                self.cars[i].move(self.cars[i-1],
+                                  2 if len(stoplights) < 1 else self.colliding(self.cars[i].pos, stoplights))
             x, y = self.cars[i].pos
+            
             self.collision_matrix[int(
                 math.floor((x-5) / 20))][int(math.floor((y-5)/20))] = 1
 

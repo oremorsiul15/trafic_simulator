@@ -58,8 +58,11 @@ class Game:
         if os.path.exists("project.pickle"):
             with open("project.pickle", "rb") as f:
                 project_data = pickle.load(f)
-            self.paths = project_data["paths"]
+            self.paths: list[Path] = project_data["paths"]
             self.stoplights = project_data["stoplights"]
+            for p in self.paths:
+                p.cars = []
+                p.rate = 20
             self.reset_surfaces()
             print("Project loaded")
         else:
