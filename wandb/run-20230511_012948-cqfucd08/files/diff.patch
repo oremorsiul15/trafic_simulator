@@ -1,0 +1,147 @@
+diff --git a/__pycache__/stoplight.cpython-311.pyc b/__pycache__/stoplight.cpython-311.pyc
+index be9826b..c89fd69 100644
+Binary files a/__pycache__/stoplight.cpython-311.pyc and b/__pycache__/stoplight.cpython-311.pyc differ
+diff --git a/__pycache__/traffic_path.cpython-311.pyc b/__pycache__/traffic_path.cpython-311.pyc
+index 78b3de9..926e72f 100644
+Binary files a/__pycache__/traffic_path.cpython-311.pyc and b/__pycache__/traffic_path.cpython-311.pyc differ
+diff --git a/project.pickle b/project.pickle
+index 99e8505..3adaf4a 100644
+Binary files a/project.pickle and b/project.pickle differ
+diff --git a/stoplight.py b/stoplight.py
+index 812fedc..e78b772 100644
+--- a/stoplight.py
++++ b/stoplight.py
+@@ -19,6 +19,9 @@ class Stoplight:
+     def set_state(self, state):
+         self.state = state
+ 
++    def toggle(self):
++        self.state = 2 if self.state == 0 else self.state -1
++
+     def flip(self):
+         self.h, self.w = (self.w, self.h)
+ 
+diff --git a/traffic.py b/traffic.py
+index fe507f9..d22099e 100644
+--- a/traffic.py
++++ b/traffic.py
+@@ -40,7 +40,7 @@ class Game:
+         pygame.init()
+         pygame.display.set_caption("traffic simulation")
+ 
+-        self.map = pygame.display.set_mode((900, 612))
++        self.map = pygame.display.set_mode((1200, 912))
+         self.map.fill(BACK_COLOR)
+         self.running = True
+         self.paths: list[Path] = []
+@@ -68,17 +68,28 @@ class Game:
+         else:
+             print("No saved project found")
+ 
++    def load_project(self, name):
++        if os.path.exists(name):
++            with open(name, "rb") as f:
++                project_data = pickle.load(f)
++            self.paths: list[Path] = project_data["paths"]
++            self.stoplights = project_data["stoplights"]
++            for p in self.paths:
++                p.cars = []
++                p.rate = 20
++            self.reset_surfaces()
++            # print("Project loaded")
++        else:
++            print("No saved project found")
++
+     def reset_surfaces(self):
+         for path in self.paths:
+             path.surface = self.map
+         for stoplight in self.stoplights:
+             stoplight.surface = self.map
+ 
+-    def set_stoplights(self, state):
+-        for s in self.stoplights:
+-            s.state = state
+-
+     def handle_input(self):
++        # this secction is only for manual testing
+         for event in pygame.event.get():
+             if event.type == pygame.QUIT:
+                 self.running = False
+@@ -106,7 +117,7 @@ class Game:
+                     if len(self.paths) > 0:
+                         self.paths.pop()
+                 elif event.key == pygame.K_g:
+-                    self.set_stoplights((self.stoplights[0].state + 1) % 3)
++                    self.action([True]*len(self.stoplights))
+                     print('toggle state')
+                 elif event.key == pygame.K_z and pygame.key.get_mods() & pygame.KMOD_CTRL:
+                     if len(self.paths) > 0:
+@@ -128,11 +139,16 @@ class Game:
+     def draw_path_count_txt(self):
+         for i in range(len(self.paths)):
+             self.p_txt = self.font.render(
+-                f"[{i}] path: {len(self.paths[i].points)} points and {len(self.paths[i].cars)} cars", True, BLACK)
++                f"[{i}] path: {len(self.paths[i].points)} points and {len(self.paths[i].cars)} cars {'(OVERFLOW)' if self.paths[i].on_overflow else ''}", True, BLACK)
+             self.map.blit(self.p_txt, (10, self.map.get_height()-20-(25*i)))
+ 
+-    def collision(self):
+-        pass
++    def action(self, toggle: list[bool]):
++        for i in range(len(toggle)):
++            if toggle[i]:
++                self.stoplights[i].toggle()
++
++    def get_observation(self):
++        return [s.state for s in self.stoplights] + [int(p.on_overflow) for p in self.paths] + [int(self.collided)]
+ 
+     def draw(self):
+         self.map.fill(BACK_COLOR if (not self.collided) else (255, 100, 100))
+@@ -154,6 +170,9 @@ class Game:
+ 
+         pygame.display.update()
+ 
++    def close(self):
++        self.running = False
++
+     def run(self):
+         while (self.running):
+             self.handle_input()
+@@ -162,6 +181,7 @@ class Game:
+             time.sleep(1/30)
+ 
+ 
+-game = Game()
+-game.init()
+-game.run()
++if __name__ == "__main__":
++    game = Game()
++    game.init()
++    game.run()
+diff --git a/traffic_path.py b/traffic_path.py
+index ff6f287..2066c0a 100644
+--- a/traffic_path.py
++++ b/traffic_path.py
+@@ -19,6 +19,7 @@ class Path:
+         self.speed = 10
+         self.path_limit = 10
+         self.surface = surface
++        self.on_overflow = False
+         self.color = (random.randint(100, 255), random.randint(
+             100, 255), random.randint(100, 255))
+         self.path = None
+@@ -55,6 +56,7 @@ class Path:
+         return 2
+ 
+     def update(self, stoplights: list[Stoplight]):
++
+         for c in self.cars:
+             if c.u >= 1:
+                 self.cars.remove(c)
+@@ -65,6 +67,7 @@ class Path:
+             self.add_car()
+ 
+         l = len(self.cars)
++        self.on_overflow = l > self.path_limit 
+ 
+         self.collision_matrix = self.collision_matrix * 0
+ 

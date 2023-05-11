@@ -1,0 +1,206 @@
+wandb_version: 1
+
+policy_type:
+  desc: null
+  value: CustomPolicy.CustomPolicy
+total_timesteps:
+  desc: null
+  value: 20000000
+learning_rate:
+  desc: null
+  value: 0.0003
+env_name:
+  desc: null
+  value: CartPole-v1
+_wandb:
+  desc: null
+  value:
+    code_path: code/ppo_train.py
+    python_version: 3.11.3
+    cli_version: 0.15.2
+    framework: torch
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    start_time: 1683781752.856003
+    t:
+      1:
+      - 1
+      - 55
+      2:
+      - 1
+      - 55
+      3:
+      - 1
+      - 16
+      - 22
+      - 23
+      - 35
+      4: 3.11.3
+      5: 0.15.2
+      8:
+      - 5
+algo:
+  desc: null
+  value: PPO
+policy_class:
+  desc: null
+  value: <class 'CustomPolicy.CustomPolicy'>
+device:
+  desc: null
+  value: cpu
+env:
+  desc: null
+  value: <stable_baselines3.common.vec_env.vec_video_recorder.VecVideoRecorder object
+    at 0x7f3838090b90>
+_vec_normalize_env:
+  desc: null
+  value: None
+verbose:
+  desc: null
+  value: 1
+policy_kwargs:
+  desc: null
+  value: '{}'
+num_timesteps:
+  desc: null
+  value: 0
+_total_timesteps:
+  desc: null
+  value: 20000000
+_num_timesteps_at_start:
+  desc: null
+  value: 0
+seed:
+  desc: null
+  value: None
+action_noise:
+  desc: null
+  value: None
+start_time:
+  desc: null
+  value: 1683781759532224764
+tensorboard_log:
+  desc: null
+  value: runs/ytelua2d
+lr_schedule:
+  desc: null
+  value: <function constant_fn.<locals>.func at 0x7f37e3634cc0>
+_last_obs:
+  desc: null
+  value: "[[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]\n [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\
+    \ 0]\n [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]\n [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\
+    \ 0]\n [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]\n [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\
+    \ 0]\n [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]\n [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\
+    \ 0]\n [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]\n [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\
+    \ 0]\n [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]\n [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\
+    \ 0]]"
+_last_episode_starts:
+  desc: null
+  value: '[ True  True  True  True  True  True  True  True  True  True  True  True]'
+_last_original_obs:
+  desc: null
+  value: None
+_episode_num:
+  desc: null
+  value: 0
+use_sde:
+  desc: null
+  value: 'False'
+sde_sample_freq:
+  desc: null
+  value: -1
+_current_progress_remaining:
+  desc: null
+  value: 1
+_stats_window_size:
+  desc: null
+  value: 100
+ep_info_buffer:
+  desc: null
+  value: deque([], maxlen=100)
+ep_success_buffer:
+  desc: null
+  value: deque([], maxlen=100)
+_n_updates:
+  desc: null
+  value: 0
+_logger:
+  desc: null
+  value: <stable_baselines3.common.logger.Logger object at 0x7f3834c1c690>
+_custom_logger:
+  desc: null
+  value: 'False'
+observation_space:
+  desc: null
+  value: Box([0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0], [2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+    2], (17,), int32)
+action_space:
+  desc: null
+  value: MultiBinary(8)
+n_envs:
+  desc: null
+  value: 12
+n_steps:
+  desc: null
+  value: 2048
+gamma:
+  desc: null
+  value: 0.99
+gae_lambda:
+  desc: null
+  value: 0.95
+ent_coef:
+  desc: null
+  value: 0.0
+vf_coef:
+  desc: null
+  value: 0.5
+max_grad_norm:
+  desc: null
+  value: 0.5
+rollout_buffer:
+  desc: null
+  value: <stable_baselines3.common.buffers.RolloutBuffer object at 0x7f3837edca10>
+batch_size:
+  desc: null
+  value: 64
+n_epochs:
+  desc: null
+  value: 10
+clip_range:
+  desc: null
+  value: <function constant_fn.<locals>.func at 0x7f37e3635da0>
+clip_range_vf:
+  desc: null
+  value: None
+normalize_advantage:
+  desc: null
+  value: 'True'
+target_kl:
+  desc: null
+  value: None
+policy:
+  desc: null
+  value: "CustomPolicy(\n  (features_extractor): CustomFeatureExtractor(\n    (network):\
+    \ Sequential(\n      (0): Linear(in_features=17, out_features=64, bias=True)\n\
+    \      (1): ReLU()\n      (2): Linear(in_features=64, out_features=124, bias=True)\n\
+    \      (3): ReLU()\n      (4): Linear(in_features=124, out_features=124, bias=True)\n\
+    \      (5): ReLU()\n      (6): Linear(in_features=124, out_features=64, bias=True)\n\
+    \      (7): ReLU()\n    )\n  )\n  (pi_features_extractor): CustomFeatureExtractor(\n\
+    \    (network): Sequential(\n      (0): Linear(in_features=17, out_features=64,\
+    \ bias=True)\n      (1): ReLU()\n      (2): Linear(in_features=64, out_features=124,\
+    \ bias=True)\n      (3): ReLU()\n      (4): Linear(in_features=124, out_features=124,\
+    \ bias=True)\n      (5): ReLU()\n      (6): Linear(in_features=124, out_features=64,\
+    \ bias=True)\n      (7): ReLU()\n    )\n  )\n  (vf_features_extractor): CustomFeatureExtractor(\n\
+    \    (network): Sequential(\n      (0): Linear(in_features=17, out_features=64,\
+    \ bias=True)\n      (1): ReLU()\n      (2): Linear(in_features=64, out_features=124,\
+    \ bias=True)\n      (3): ReLU()\n      (4): Linear(in_features=124, out_features=124,\
+    \ bias=True)\n      (5): ReLU()\n      (6): Linear(in_features=124, out_features=64,\
+    \ bias=True)\n      (7): ReLU()\n    )\n  )\n  (mlp_extractor): MlpExtractor(\n\
+    \    (policy_net): Sequential(\n      (0): Linear(in_features=64, out_features=64,\
+    \ bias=True)\n      (1): Tanh()\n      (2): Linear(in_features=64, out_features=64,\
+    \ bias=True)\n      (3): Tanh()\n    )\n    (value_net): Sequential(\n      (0):\
+    \ Linear(in_features=64, out_features=64, bias=True)\n      (1): Tanh()\n    \
+    \  (2): Linear(in_features=64, out_features=64, bias=True)\n      (3): Tanh()\n\
+    \    )\n  )\n  (action_net): Linear(in_features=64, out_features=8, bias=True)\n\
+    \  (value_net): Linear(in_features=64, out_features=1, bias=True)\n)"

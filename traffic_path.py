@@ -19,6 +19,7 @@ class Path:
         self.speed = 10
         self.path_limit = 10
         self.surface = surface
+        self.on_overflow = False
         self.color = (random.randint(100, 255), random.randint(
             100, 255), random.randint(100, 255))
         self.path = None
@@ -55,6 +56,7 @@ class Path:
         return 2
 
     def update(self, stoplights: list[Stoplight]):
+
         for c in self.cars:
             if c.u >= 1:
                 self.cars.remove(c)
@@ -65,6 +67,7 @@ class Path:
             self.add_car()
 
         l = len(self.cars)
+        self.on_overflow = l > self.path_limit 
 
         self.collision_matrix = self.collision_matrix * 0
 

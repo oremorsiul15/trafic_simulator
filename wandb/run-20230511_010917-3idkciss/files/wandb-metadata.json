@@ -1,0 +1,204 @@
+{
+    "os": "Linux-5.10.102.1-microsoft-standard-WSL2-x86_64-with-glibc2.31",
+    "python": "3.11.3",
+    "heartbeatAt": "2023-05-11T05:09:18.603641",
+    "startedAt": "2023-05-11T05:09:17.152020",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "<python with no main file>",
+    "git": {
+        "remote": "git@github.com:oremorsiul15/trafic_simulator.git",
+        "commit": "5b411ddea837a337c31534e692330a2698742b0b"
+    },
+    "email": "luis.romero14@upr.edu",
+    "root": "/home/oremorsiul15/DL",
+    "host": "NorthClock",
+    "username": "oremorsiul15",
+    "executable": "/home/oremorsiul15/DL/venv/bin/python",
+    "cpu_count": 16,
+    "cpu_count_logical": 32,
+    "cpu_freq": {
+        "current": 3499.991999999999,
+        "min": 0.0,
+        "max": 0.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 3499.992,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3499.992,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3499.992,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3499.992,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3499.992,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3499.992,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3499.992,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3499.992,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3499.992,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3499.992,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3499.992,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3499.992,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3499.992,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3499.992,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3499.992,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3499.992,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3499.992,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3499.992,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3499.992,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3499.992,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3499.992,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3499.992,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3499.992,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3499.992,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3499.992,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3499.992,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3499.992,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3499.992,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3499.992,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3499.992,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3499.992,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3499.992,
+            "min": 0.0,
+            "max": 0.0
+        }
+    ],
+    "disk": {
+        "total": 250.98248672485352,
+        "used": 123.91827011108398
+    },
+    "gpu": "NVIDIA GeForce RTX 2070 SUPER",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce RTX 2070 SUPER",
+            "memory_total": 8589934592
+        }
+    ],
+    "memory": {
+        "total": 31.318988800048828
+    }
+}

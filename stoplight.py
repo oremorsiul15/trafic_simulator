@@ -19,6 +19,9 @@ class Stoplight:
     def set_state(self, state):
         self.state = state
 
+    def toggle(self):
+        self.state = 2 if self.state == 0 else self.state -1
+
     def flip(self):
         self.h, self.w = (self.w, self.h)
 

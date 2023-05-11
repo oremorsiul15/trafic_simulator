@@ -1,0 +1,6 @@
+{
+  "name": "UPRM",
+  "description": "UPRM traffic light simulation",
+  "stoplights": 8,
+  "paths": 8
+}
