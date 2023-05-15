@@ -8,16 +8,16 @@ import torch
 class CustomFeatureExtractor(BaseFeaturesExtractor):
     def __init__(self, observation_space: gym.spaces.Space):
         super(CustomFeatureExtractor, self).__init__(
-            observation_space, features_dim=64)
+            observation_space, features_dim=256)
 
         self.network = nn.Sequential(
-            nn.Linear(observation_space.shape[0], 64),
+            nn.Linear(observation_space.shape[0], 128),
             nn.ReLU(),
-            nn.Linear(64, 124),
+            nn.Linear(128, 256),
             nn.ReLU(),
-            nn.Linear(124, 124),
+            nn.Linear(256, 256),
             nn.ReLU(),
-            nn.Linear(124, 64),
+            nn.Linear(256, 256),
             nn.ReLU(),
         )
 

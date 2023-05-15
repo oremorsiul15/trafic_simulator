@@ -47,6 +47,7 @@ class Game:
         self.stoplights: list[Stoplight] = []
 
         self.collided = False
+        self.c_mat = np.zeros((8, 60, 45))
 
     def save_project(self):
         with open("project.pickle", "wb") as f:
@@ -133,8 +134,8 @@ class Game:
     def update(self):
         for p in self.paths:
             p.update(self.stoplights)
-        c_mat = np.array([m.collision_matrix for m in self.paths])
-        self.collided = (np.sum(c_mat, axis=0)//2).sum() > 0
+        self.c_mat = np.array([m.collision_matrix for m in self.paths])
+        self.collided = (np.sum(self.c_mat, axis=0)//2).sum() > 0
 
     def draw_path_count_txt(self):
         for i in range(len(self.paths)):
@@ -142,13 +143,21 @@ class Game:
                 f"[{i}] path: {len(self.paths[i].points)} points and {len(self.paths[i].cars)} cars {'(OVERFLOW)' if self.paths[i].on_overflow else ''}", True, BLACK)
             self.map.blit(self.p_txt, (10, self.map.get_height()-20-(25*i)))
 
-    def action(self, toggle: list[bool]):
+    # def action(self, toggle: list[bool]):
+    #     for i in range(len(toggle)):
+    #         if toggle[i]:
+    #             self.stoplights[i].toggle()
+
+    def action(self, action_index: int):
+        binary_action = bin(action_index)[2:].zfill(8)
+        toggle = [bool(int(bit)) for bit in binary_action]
+
         for i in range(len(toggle)):
             if toggle[i]:
                 self.stoplights[i].toggle()
 
     def get_observation(self):
-        return [s.state for s in self.stoplights] + [int(p.on_overflow) for p in self.paths] + [int(self.collided)]
+        return [s.state for s in self.stoplights] + [int(p.on_overflow) for p in self.paths] + [int(self.collided)] + self.c_mat.reshape(-1).tolist()
 
     def draw(self):
         self.map.fill(BACK_COLOR if (not self.collided) else (255, 100, 100))

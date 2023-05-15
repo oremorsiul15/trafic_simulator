@@ -1,0 +1,173 @@
+diff --git a/CustomPolicy.py b/CustomPolicy.py
+index 2db6f8a..d240e84 100644
+--- a/CustomPolicy.py
++++ b/CustomPolicy.py
+@@ -8,16 +8,16 @@ import torch
+ class CustomFeatureExtractor(BaseFeaturesExtractor):
+     def __init__(self, observation_space: gym.spaces.Space):
+         super(CustomFeatureExtractor, self).__init__(
+-            observation_space, features_dim=64)
++            observation_space, features_dim=256)
+ 
+         self.network = nn.Sequential(
+-            nn.Linear(observation_space.shape[0], 64),
++            nn.Linear(observation_space.shape[0], 128),
+             nn.ReLU(),
+-            nn.Linear(64, 124),
++            nn.Linear(128, 256),
+             nn.ReLU(),
+-            nn.Linear(124, 124),
++            nn.Linear(256, 256),
+             nn.ReLU(),
+-            nn.Linear(124, 64),
++            nn.Linear(256, 256),
+             nn.ReLU(),
+         )
+ 
+@@ -28,4 +28,4 @@ class CustomFeatureExtractor(BaseFeaturesExtractor):
+ class CustomPolicy(ActorCriticPolicy):
+     def __init__(self, *args, **kwargs):
+         super(CustomPolicy, self).__init__(*args, **kwargs,
+-                                           features_extractor_class=CustomFeatureExtractor)
+\ No newline at end of file
++                                           features_extractor_class=CustomFeatureExtractor)
+diff --git a/ppo_train.py b/ppo_train.py
+index 4a27614..365db89 100644
+--- a/ppo_train.py
++++ b/ppo_train.py
+@@ -18,12 +18,12 @@ from traffic_env import TrafficSimEnv
+ 
+ config = {
+     "policy_type": CustomPolicy,
+-    "total_timesteps": 20_000_000,
++    "total_timesteps": 2_000_000,
+     "learning_rate": 0.0003,
+-    "env_name": "CartPole-v1",
++    "env_name": "Traffic UPRM",
+ }
+ run = wandb.init(
+-    project="Traffic Simulation RL",
++    project="PPO Traffic Simulation RL",
+     config=config,
+     sync_tensorboard=True,  # auto-upload sb3's tensorboard metrics
+     monitor_gym=True,  # auto-upload the videos of agents playing the game
+@@ -44,7 +44,7 @@ def make_env(rank, seed=0):
+ if __name__ == '__main__':
+     log_dir = "tmp/"
+ 
+-    num_cpu = 12
++    num_cpu = 6
+ 
+     env = VecMonitor(SubprocVecEnv([make_env(i)
+                                     for i in range(num_cpu)]), "tmp/monitor")
+@@ -55,7 +55,7 @@ if __name__ == '__main__':
+         total_timesteps=config["total_timesteps"],
+         callback=WandbCallback(
+             gradient_save_freq=100,
+-            model_save_path=f"models/{run.id}",
++            model_save_path="models/PPO",
+             verbose=2,
+         ),
+     )
+diff --git a/test_env.py b/test_env.py
+index 3f16e6d..6946b08 100644
+--- a/test_env.py
++++ b/test_env.py
+@@ -7,8 +7,9 @@ observation = env.reset()
+ for _ in range(1000):
+     env.render()
+     action = env.action_space.sample()  # take a random action
++    # print(action)
+     observation, reward, done, info = env.step(action)
+-
++    print(len(observation))
+     if done:
+         observation = env.reset()
+ 
+diff --git a/traffic.py b/traffic.py
+index 06e4b04..5feef6a 100644
+--- a/traffic.py
++++ b/traffic.py
+@@ -47,6 +47,7 @@ class Game:
+         self.stoplights: list[Stoplight] = []
+ 
+         self.collided = False
++        self.c_mat = np.zeros((8, 60, 45))
+ 
+     def save_project(self):
+         with open("project.pickle", "wb") as f:
+@@ -133,8 +134,8 @@ class Game:
+     def update(self):
+         for p in self.paths:
+             p.update(self.stoplights)
+-        c_mat = np.array([m.collision_matrix for m in self.paths])
+-        self.collided = (np.sum(c_mat, axis=0)//2).sum() > 0
++        self.c_mat = np.array([m.collision_matrix for m in self.paths])
++        self.collided = (np.sum(self.c_mat, axis=0)//2).sum() > 0
+ 
+     def draw_path_count_txt(self):
+         for i in range(len(self.paths)):
+@@ -142,13 +143,21 @@ class Game:
+                 f"[{i}] path: {len(self.paths[i].points)} points and {len(self.paths[i].cars)} cars {'(OVERFLOW)' if self.paths[i].on_overflow else ''}", True, BLACK)
+             self.map.blit(self.p_txt, (10, self.map.get_height()-20-(25*i)))
+ 
+-    def action(self, toggle: list[bool]):
++    # def action(self, toggle: list[bool]):
++    #     for i in range(len(toggle)):
++    #         if toggle[i]:
++    #             self.stoplights[i].toggle()
++
++    def action(self, action_index: int):
++        binary_action = bin(action_index)[2:].zfill(8)
++        toggle = [bool(int(bit)) for bit in binary_action]
++
+         for i in range(len(toggle)):
+             if toggle[i]:
+                 self.stoplights[i].toggle()
+ 
+     def get_observation(self):
+-        return [s.state for s in self.stoplights] + [int(p.on_overflow) for p in self.paths] + [int(self.collided)]
++        return [s.state for s in self.stoplights] + [int(p.on_overflow) for p in self.paths] + [int(self.collided)] + self.c_mat.reshape(-1).tolist()
+ 
+     def draw(self):
+         self.map.fill(BACK_COLOR if (not self.collided) else (255, 100, 100))
+diff --git a/traffic_env.py b/traffic_env.py
+index 745a300..733f4c3 100644
+--- a/traffic_env.py
++++ b/traffic_env.py
+@@ -13,12 +13,15 @@ class TrafficSimEnv(gym.Env):
+         self.game.load_project('project.pickle')
+ 
+         # Assuming each stoplight can be either 0 or 1
+-        self.action_space = spaces.MultiBinary(len(self.game.stoplights))
++        # self.action_space = spaces.MultiBinary(len(self.game.stoplights))
++        self.action_space = spaces.Discrete(2 ** len(self.game.stoplights))
+ 
+         # For observation space, this is an example assuming each stoplight state can be 0 or 1,
+         # each path can overflow or not, and there is a collision or not
++        # self.observation_space = spaces.Box(
++        #     low=0, high=2, shape=(17,), dtype=np.int32)
+         self.observation_space = spaces.Box(
+-            low=0, high=2, shape=(17,), dtype=np.int32)
++            low=0, high=2, shape=(21617,), dtype=np.int32)
+ 
+     def step(self, action):
+         # Execute action
+@@ -60,7 +63,7 @@ class TrafficSimEnv(gym.Env):
+         # This is just a placeholder
+         # print(list[bool](observation[8:15]),
+         #       len(list[bool](observation[8:16])))
+-        return -100 if bool(observation[16]) or any(list[bool](observation[8:16])) else 0.1
++        return -1 if bool(observation[16]) or any(list[bool](observation[8:16])) else 0.1
+ 
+     def is_done(self, observation):
+         # Implement your logic to determine when the episode is done
+diff --git a/wandb/latest-run b/wandb/latest-run
+index 56ad2ed..f80734f 120000
+--- a/wandb/latest-run
++++ b/wandb/latest-run
+@@ -1 +1 @@
+-run-20230512_101031-leex67rd
+\ No newline at end of file
++run-20230515_002243-wd2xulnp
+\ No newline at end of file

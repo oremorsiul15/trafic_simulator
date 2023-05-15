@@ -13,12 +13,15 @@ class TrafficSimEnv(gym.Env):
         self.game.load_project('project.pickle')
 
         # Assuming each stoplight can be either 0 or 1
-        self.action_space = spaces.MultiBinary(len(self.game.stoplights))
+        # self.action_space = spaces.MultiBinary(len(self.game.stoplights))
+        self.action_space = spaces.Discrete(2 ** len(self.game.stoplights))
 
         # For observation space, this is an example assuming each stoplight state can be 0 or 1,
         # each path can overflow or not, and there is a collision or not
+        # self.observation_space = spaces.Box(
+        #     low=0, high=2, shape=(17,), dtype=np.int32)
         self.observation_space = spaces.Box(
-            low=0, high=2, shape=(17,), dtype=np.int32)
+            low=0, high=2, shape=(21617,), dtype=np.int32)
 
     def step(self, action):
         # Execute action
@@ -60,7 +63,7 @@ class TrafficSimEnv(gym.Env):
         # This is just a placeholder
         # print(list[bool](observation[8:15]),
         #       len(list[bool](observation[8:16])))
-        return -100 if bool(observation[16]) or any(list[bool](observation[8:16])) else 0.1
+        return -1 if bool(observation[16]) or any(list[bool](observation[8:16])) else 0.1
 
     def is_done(self, observation):
         # Implement your logic to determine when the episode is done
