@@ -78,7 +78,7 @@ class Game:
                 p.cars = []
                 p.rate = 20
             self.reset_surfaces()
-            # print("Project loaded")
+            print("Project loaded")
         else:
             print("No saved project found")
 
